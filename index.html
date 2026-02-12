@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CHUB Blind Typing Competition</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0f0f, #1a001f);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 1000px;
+            background: rgba(20, 0, 30, 0.9);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 30px #a35ecb;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 180px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 30px;
+            background: linear-gradient(90deg, #ff00cc, #a100ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #timer {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #ff66ff;
+        }
+
+        #paragraph {
+            background: #1a001f;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            line-height: 1.7;
+            border: 1px solid #a100ff;
+            font-size: 20px;
+            white-space: pre-wrap;
+        }
+
+        textarea {
+            width: 100%;
+            height: 140px;
+            border-radius: 12px;
+            border: 1px solid #ff00cc;
+            padding: 15px;
+            font-size: 20px;
+            outline: none;
+            resize: none;
+            background: #0f0015;
+            color: white;
+        }
+
+        textarea:focus {
+            box-shadow: 0 0 10px #ff00cc;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 10px 25px;
+            margin: 5px;
+            border-radius: 25px;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            background: linear-gradient(90deg, #ff00cc, #a100ff);
+            color: white;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff00cc;
+        }
+
+        #result {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        <img src="CodeHub.png" alt="CHUB Logo">
+    </div>
+
+    <h1>CodeHub Blind Typing Competition</h1>
+
+    <div id="timer">Time: 0.00 seconds</div>
+
+    <div id="paragraph"></div>
+
+    <textarea id="input" placeholder="Start typing here..."></textarea>
+
+    <div class="buttons">
+        <button onclick="finishTest()">Done</button>
+        <button onclick="resetTest()">Reset</button>
+    </div>
+
+    <div id="result"></div>
+
+</div>
+
+<script>
+
+const originalText = `Innovation and research drive the future of technology.
+Accuracy and speed are essential skills in today's digital world.
+Practice builds confidence and excellence in every competition.`;
+
+const paragraphElement = document.getElementById("paragraph");
+const input = document.getElementById("input");
+const timerDisplay = document.getElementById("timer");
+const result = document.getElementById("result");
+
+paragraphElement.innerText = originalText;
+
+let startTime = null;
+let timerInterval = null;
+let finished = false;
+
+input.addEventListener("input", function () {
+
+    if (!startTime) {
+        startTime = new Date();
+        timerInterval = setInterval(updateTimer, 10);
+    }
+
+});
+
+function updateTimer() {
+    const elapsed = ((new Date() - startTime) / 1000).toFixed(2);
+    timerDisplay.innerText = "Time: " + elapsed + " seconds";
+}
+
+function finishTest() {
+
+    if (!startTime || finished) return;
+
+    clearInterval(timerInterval);
+    finished = true;
+
+    const totalTime = ((new Date() - startTime) / 1000).toFixed(2);
+    const typedText = input.value;
+
+    const accuracy = calculateAccuracy(typedText, originalText);
+
+    result.innerHTML = `
+        ✅ Test Submitted! <br><br>
+        ⏱ Time Taken: ${totalTime} seconds <br>
+        🎯 Accuracy: ${accuracy}%
+    `;
+
+    input.disabled = true;
+}
+
+function calculateAccuracy(typed, original) {
+
+    let correct = 0;
+
+    for (let i = 0; i < original.length; i++) {
+        if (typed[i] === original[i]) {
+            correct++;
+        }
+    }
+
+    return ((correct / original.length) * 100).toFixed(2);
+}
+
+function resetTest() {
+    clearInterval(timerInterval);
+    startTime = null;
+    finished = false;
+    input.value = "";
+    input.disabled = false;
+    timerDisplay.innerText = "Time: 0.00 seconds";
+    result.innerHTML = "";
+}
+
+</script>
+
+</body>
+</html>
