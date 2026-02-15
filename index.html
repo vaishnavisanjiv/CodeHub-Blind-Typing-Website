@@ -49,6 +49,7 @@
             color: #ff66ff;
         }
 
+        /* 🔒 Paragraph Protection */
         #paragraph {
             background: #1a001f;
             padding: 20px;
@@ -58,6 +59,11 @@
             border: 1px solid #a100ff;
             font-size: 20px;
             white-space: pre-wrap;
+
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            pointer-events: none;
         }
 
         textarea {
@@ -107,7 +113,7 @@
     </style>
 </head>
 
-<body>
+<body oncontextmenu="return false;">
 
 <div class="container">
 
@@ -134,9 +140,7 @@
 
 <script>
 
-const originalText = `Innovation and research drive the future of technology.
-Accuracy and speed are essential skills in today's digital world.
-Practice builds confidence and excellence in every competition.`;
+const originalText = `I decided to go to the gym today to become a fitness legend. I put on my fanciest shoes and a shirt that says "No Pain No Gain." I walked onto the treadmill and pressed the start button with great confidence. Two minutes later, I realized that walking is actually quite difficult. My legs started questioning my life choices, and my confidence slowly pressed the stop button before I did.`;
 
 const paragraphElement = document.getElementById("paragraph");
 const input = document.getElementById("input");
@@ -206,6 +210,21 @@ function resetTest() {
     timerDisplay.innerText = "Time: 0.00 seconds";
     result.innerHTML = "";
 }
+
+/* 🔒 Disable Copy, Cut, Select All */
+document.addEventListener("keydown", function(e) {
+
+    if (e.ctrlKey && 
+        (e.key === "c" || e.key === "x" || e.key === "a")) {
+        e.preventDefault();
+    }
+
+});
+
+/* 🔒 Disable Paste */
+input.addEventListener("paste", function(e) {
+    e.preventDefault();
+});
 
 </script>
 
